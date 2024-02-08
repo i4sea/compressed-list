@@ -1,9 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Card } from "./Card";
+import Card from "./components/Card";
+import { compressItem } from "./utils/compressItem";
+import AddItem from "./components/AddItem";
+import { useItemsStore } from "./store";
+
+export type DragAndDropItem = {
+  id: number;
+  title: string;
+};
 
 /* Regra de compressão
   'aaaabbccc' -> 'a4b2c3' 
@@ -11,44 +18,47 @@ import { Card } from "./Card";
 */
 
 function App() {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      title: "aaaabbccc",
-    },
-    {
-      id: 2,
-      title: "abbbc",
-    },
-    {
-      id: 3,
-      title: "aaccdd",
-    },
-  ]);
+  const { items, changeOrder } = useItemsStore();
 
   const moveItem = (dragIndex: number, hoverIndex: number) => {
     const dragItem = items && items[dragIndex];
+    const copy = [...items];
 
-    setItems((prevState: any) => {
-      const itemsList = [...prevState];
-      const prevItem = itemsList.splice(hoverIndex, 1, dragItem);
-      itemsList.splice(dragIndex, 1, prevItem[0]);
+    const prevItem = copy.splice(hoverIndex, 1, dragItem);
+    copy.splice(dragIndex, 1, prevItem[0]);
 
-      return itemsList;
-    });
+    changeOrder(copy);
   };
 
   const renderCard = () => {
-    return items.map((task: any, index: any) => (
-      <Card index={index} item={task} moveRow={moveItem} />
-    ));
+    return items.map((task: DragAndDropItem, index: number) => {
+      const formattedItem = {
+        id: task.id,
+        title: compressItem(task.title),
+      };
+      return (
+        <Card
+          key={task.id}
+          index={index}
+          item={formattedItem}
+          moveRow={moveItem}
+        />
+      );
+    });
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      {/* Adicione aqui o campo para inserir um novo item seguindo a regra de compressão */}
-      {renderCard()}
-    </DndProvider>
+    <div className="max-w-[1280px] mx-auto p-3">
+      <div className="flex flex-col gap-2">
+        <div className="self-end">
+          <AddItem />
+        </div>
+        <DndProvider backend={HTML5Backend}>
+          {/* Adicione aqui o campo para inserir um novo item seguindo a regra de compressão */}
+          {renderCard()}
+        </DndProvider>
+      </div>
+    </div>
   );
 }
 

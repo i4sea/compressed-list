@@ -4,7 +4,7 @@
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-export function Card(props: any) {
+export default function Card(props: any) {
   const { id, title } = props.item;
 
   const ref = useRef<HTMLInputElement>(null);
@@ -62,15 +62,16 @@ export function Card(props: any) {
 
   drag(drop(ref));
 
-  const bgColor = collectedDragProps.isDragging ? "gray" : "";
+  const bgColor = collectedDragProps.isDragging ? "bg-slate-400" : "";
 
   return (
     <div
       style={{ backgroundColor: bgColor }}
+      className="flex p-2 rounded-md border border-stone-800 bg-slate-50  mt-2"
       ref={ref}
       data-handler-id={collectedProps.handlerId}
     >
-      <h1>{title}</h1>
+      <h1>Compressed id: {title}</h1>
     </div>
   );
 }
