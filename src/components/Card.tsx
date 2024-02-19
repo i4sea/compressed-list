@@ -3,6 +3,7 @@
 
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { compressTitle } from "../formatters/formatters";
 
 export function Card(props: any) {
   const { id, title } = props.item;
@@ -70,7 +71,7 @@ export function Card(props: any) {
       ref={ref}
       data-handler-id={collectedProps.handlerId}
     >
-      <h1 className="underline">{title}</h1>
+      <h1 className="underline">{compressTitle(title)}</h1>
     </div>
   );
 }

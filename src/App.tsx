@@ -1,10 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Card } from "./components/Card";
 import { NewCardInput } from "./components/NewCardInput";
+import { useCartStore } from "./globalStates/useTasksStore";
+import { useEffect, useState } from "react";
+import { TaskType } from "./types/types";
 
 /* Regra de compressão
   'aaaabbccc' -> 'a4b2c3' 
@@ -12,20 +15,18 @@ import { NewCardInput } from "./components/NewCardInput";
 */
 
 function App() {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      title: "aaaabbccc",
-    },
-    {
-      id: 2,
-      title: "abbbc",
-    },
-    {
-      id: 3,
-      title: "aaccdd",
-    },
-  ]);
+
+  const [myTasks, setMyTasks] = useState()
+
+  const {tasks} = useCartStore()
+
+  const getTasks = async () => {
+    setMyTasks(await tasks)
+  }
+
+  useEffect(() => {
+    getTasks()
+  }, [tasks]);
 
   const moveItem = (dragIndex: number, hoverIndex: number) => {
     const dragItem = items && items[dragIndex];
@@ -39,8 +40,8 @@ function App() {
     });
   };
 
-  const renderCard = () => {
-    return items.map((task: any, index: any) => (
+  const renderCard = (tasks: TaskType[]) => {
+    return tasks.map((task: any, index: any) => (
       <Card key={task.id} index={index} item={task} moveRow={moveItem} />
     ));
   };
@@ -49,7 +50,7 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       {/* Adicione aqui o campo para inserir um novo item seguindo a regra de compressão */}
       <NewCardInput />
-      {renderCard()}
+      {myTasks && renderCard(myTasks)}
     </DndProvider>
   );
 }
