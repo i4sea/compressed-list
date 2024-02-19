@@ -70,7 +70,7 @@ export function Card(props: any) {
       ref={ref}
       data-handler-id={collectedProps.handlerId}
     >
-      <h1>{title}</h1>
+      <h1 className="underline">{title}</h1>
     </div>
   );
 }

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Card } from "./Card";
+import { Card } from "./components/Card";
+import { NewCardInput } from "./components/NewCardInput";
 
 /* Regra de compressão
   'aaaabbccc' -> 'a4b2c3' 
@@ -40,13 +41,14 @@ function App() {
 
   const renderCard = () => {
     return items.map((task: any, index: any) => (
-      <Card index={index} item={task} moveRow={moveItem} />
+      <Card key={task.id} index={index} item={task} moveRow={moveItem} />
     ));
   };
 
   return (
     <DndProvider backend={HTML5Backend}>
       {/* Adicione aqui o campo para inserir um novo item seguindo a regra de compressão */}
+      <NewCardInput />
       {renderCard()}
     </DndProvider>
   );
