@@ -1,4 +1,4 @@
 export type TaskType = {
-    id: number;
+    id?: number;
     title: string;
   };

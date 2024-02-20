@@ -4,40 +4,35 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Card } from "./components/Card";
-import { NewCardInput } from "./components/NewCardInput";
-import { useCartStore } from "./globalStates/useTasksStore";
-import { useEffect, useState } from "react";
+import { NewCardForm } from "./components/NewCardForm";
+import { useTasksStore } from "./globalStates/useTasksStore";
+import { useEffect } from "react";
 import { TaskType } from "./types/types";
-
-/* Regra de compressão
-  'aaaabbccc' -> 'a4b2c3' 
-  'abbbc' -> 'a1b3c1'
-*/
+import { getAllTasks } from "./resquests/tasks";
 
 function App() {
-
-  const [myTasks, setMyTasks] = useState()
-
-  const {tasks} = useCartStore()
+  const { tasks, replaceList } = useTasksStore();
 
   const getTasks = async () => {
-    setMyTasks(await tasks)
-  }
+    replaceList(await getAllTasks());
+  };
 
   useEffect(() => {
-    getTasks()
-  }, [tasks]);
+    getTasks();
+  }, []);
 
   const moveItem = (dragIndex: number, hoverIndex: number) => {
-    const dragItem = items && items[dragIndex];
+    const dragItem = tasks && tasks[dragIndex];
 
-    setItems((prevState: any) => {
+    const reorderList = (prevState: any) => {
       const itemsList = [...prevState];
       const prevItem = itemsList.splice(hoverIndex, 1, dragItem);
       itemsList.splice(dragIndex, 1, prevItem[0]);
 
       return itemsList;
-    });
+    };
+
+    replaceList(reorderList(tasks));
   };
 
   const renderCard = (tasks: TaskType[]) => {
@@ -47,11 +42,21 @@ function App() {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      {/* Adicione aqui o campo para inserir um novo item seguindo a regra de compressão */}
-      <NewCardInput />
-      {myTasks && renderCard(myTasks)}
-    </DndProvider>
+    <div className="bg-gray-800 p-6 flex flex-col items-center min-h-screen">
+      <h1 className="text-4xl mb-10 text-white">Compressed List - i4sea</h1>
+      <DndProvider backend={HTML5Backend}>
+        <div className="flex flex-col gap-14 w-full sm:w-1/2">
+          <NewCardForm />
+          <hr />
+          <div className="flex flex-col gap-4 items-center">
+            <h2 className="text-white text-xl font-semibold">Tarefas</h2>
+            <ul className="flex flex-col gap-4 ">
+              {tasks && renderCard(tasks)}
+            </ul>
+          </div>
+        </div>
+      </DndProvider>
+    </div>
   );
 }
 

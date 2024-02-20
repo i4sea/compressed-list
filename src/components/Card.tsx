@@ -4,11 +4,12 @@
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { compressTitle } from "../formatters/formatters";
+import { twMerge } from "tailwind-merge";
 
 export function Card(props: any) {
   const { id, title } = props.item;
 
-  const ref = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLLIElement>(null);
 
   const [collectedProps, drop] = useDrop({
     accept: "dnd-items",
@@ -63,15 +64,16 @@ export function Card(props: any) {
 
   drag(drop(ref));
 
-  const bgColor = collectedDragProps.isDragging ? "gray" : "";
-
   return (
-    <div
-      style={{ backgroundColor: bgColor }}
+    <li
       ref={ref}
       data-handler-id={collectedProps.handlerId}
+      className={twMerge(
+        "flex gap-4 items-center shadow shadow-cyan-700 w-[200px] rounded-xl p-3 border-2 bg-cyan-900 border-cyan-700 text-white",
+        collectedDragProps.isDragging && "opacity-5"
+      )}
     >
-      <h1 className="underline">{compressTitle(title)}</h1>
-    </div>
+      <h1>{compressTitle(title)}</h1>
+    </li>
   );
 }
