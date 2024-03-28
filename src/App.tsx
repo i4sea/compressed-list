@@ -5,24 +5,24 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Card } from "./Card";
 
-/* Regra de compressão
-  'aaaabbccc' -> 'a4b2c3' 
-  'abbbc' -> 'a1b3c1'
+/*
+  Alfabeto: abcdefghijklmnopqrstuvwxyz
+  Alfabeto após a cifra de César (chave = 3): defghijklmnopqrstuvwxyzabc
 */
 
 function App() {
   const [items, setItems] = useState([
     {
       id: 1,
-      title: "aaaabbccc",
+      title: "khoor",
     },
     {
       id: 2,
-      title: "abbbc",
+      title: "hakors",
     },
     {
       id: 3,
-      title: "aaccdd",
+      title: "vhlguir",
     },
   ]);
 
@@ -45,10 +45,10 @@ function App() {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      {/* Adicione aqui o campo para inserir um novo item seguindo a regra de compressão */}
-      {renderCard()}
-    </DndProvider>
+    <>
+      {/* Adicione aqui o campo para inserir um novo item seguindo a cifra de César */}
+      <DndProvider backend={HTML5Backend}>{renderCard()}</DndProvider>
+    </>
   );
 }
 
