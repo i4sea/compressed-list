@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import styles from "./styles.module.scss";
+import { ItemType } from "../../types/ItemType";
 
-export function Card(props: any) {
-  const { id, title } = props.item;
+interface ICardProps {
+  item: ItemType;
+  index: number;
+  moveItem: (dragIndex: number, hoverIndex: number) => void;
+}
+
+export function Card({ item, index, moveItem }: ICardProps) {
+  const { id, title } = item;
 
   const ref = useRef<HTMLInputElement>(null);
 
@@ -16,13 +22,13 @@ export function Card(props: any) {
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(item: any, monitor: any) {
+    hover(currentItem: any, monitor: any) {
       if (!ref.current) {
         return;
       }
 
-      const dragIndex = item.index;
-      const hoverIndex = props.index;
+      const dragIndex = currentItem.index;
+      const hoverIndex = index;
 
       if (dragIndex === hoverIndex) {
         return;
@@ -45,15 +51,15 @@ export function Card(props: any) {
         return;
       }
 
-      props.moveRow(dragIndex, hoverIndex);
-      item.index = hoverIndex;
+      moveItem(dragIndex, hoverIndex);
+      currentItem.index = hoverIndex;
     },
   });
 
   const [collectedDragProps, drag] = useDrag({
     type: "dnd-items",
     item: () => {
-      return { id, index: props.index };
+      return { id, index: index };
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -67,6 +73,7 @@ export function Card(props: any) {
   return (
     <div
       style={{ backgroundColor: bgColor }}
+      className={styles.container}
       ref={ref}
       data-handler-id={collectedProps.handlerId}
     >

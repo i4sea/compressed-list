@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  padding: 0 32px;
+
+  &__items {
+    width: 616px;
+    padding: 16px;
+
+    border-radius: 16px;
+    border: 1px solid rgb(102, 101, 101);
+  }
+}
+
+.insert {
+  display: flex;
+  justify-content: center;
+
+  gap: 16px;
+
+  input {
+    width: 400px;
+  }
+
+  button {
+    width: 200px;
+  }
+}
