@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "@rabisco/eslint-config/react"
+  ]
+}

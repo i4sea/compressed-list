@@ -1,76 +1,82 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useRef } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import { useRef } from 'react'
+import { useDrag, useDrop } from 'react-dnd'
+import { ItemProps } from './store/useItem'
 
-export function Card(props: any) {
-  const { id, title } = props.item;
+type CardProps = {
+  item: ItemProps
+  index: number
+  moveRow: (dragIndex: number, hoverIndex: number) => void
+}
 
-  const ref = useRef<HTMLInputElement>(null);
+export function Card({ item, index, moveRow }: CardProps) {
+  const ref = useRef<HTMLInputElement>(null)
 
   const [collectedProps, drop] = useDrop({
-    accept: "dnd-items",
+    accept: 'dnd-items',
     collect(monitor) {
       return {
-        handlerId: monitor.getHandlerId(),
-      };
+        handlerId: monitor.getHandlerId()
+      }
     },
     hover(item: any, monitor: any) {
       if (!ref.current) {
-        return;
+        return
       }
 
-      const dragIndex = item.index;
-      const hoverIndex = props.index;
+      const dragIndex = item.index
+      const hoverIndex = index
 
       if (dragIndex === hoverIndex) {
-        return;
+        return
       }
 
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverBoundingRect = ref.current?.getBoundingClientRect()
 
       const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
 
-      const clientOffset = monitor.getClientOffset();
+      const clientOffset = monitor.getClientOffset()
 
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top
 
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
+        return
       }
 
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
+        return
       }
 
-      props.moveRow(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
-  });
+      moveRow(dragIndex, hoverIndex)
+      item.index = hoverIndex
+    }
+  })
 
   const [collectedDragProps, drag] = useDrag({
-    type: "dnd-items",
+    type: 'dnd-items',
     item: () => {
-      return { id, index: props.index };
+      return { id: item.id, index }
     },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
+    collect: monitor => ({
+      isDragging: monitor.isDragging()
+    })
+  })
 
-  drag(drop(ref));
+  drag(drop(ref))
 
-  const bgColor = collectedDragProps.isDragging ? "gray" : "";
+  const bgColor = collectedDragProps.isDragging ? 'gray' : ''
 
   return (
     <div
+      className="p-4 bg-slate-500 rounded-md"
       style={{ backgroundColor: bgColor }}
       ref={ref}
       data-handler-id={collectedProps.handlerId}
     >
-      <h1>{title}</h1>
+      <h1 className="text-gray-200 font-bold text-center">{item.title}</h1>
     </div>
-  );
+  )
 }
