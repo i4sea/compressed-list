@@ -3,7 +3,7 @@
 
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { ItemProps } from './store/useItem'
+import { ItemProps } from '../store/useItem'
 
 type CardProps = {
   item: ItemProps

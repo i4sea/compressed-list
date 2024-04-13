@@ -1,5 +1,6 @@
-import Form from './Form'
-import BoxCard from './BoxCard'
+import Form from './components/Form'
+import BoxCard from './components/BoxCard'
+import FormFilter from './components/FormFilter'
 
 /*
   Alfabeto: abcdefghijklmnopqrstuvwxyz
@@ -10,6 +11,7 @@ function App() {
   return (
     <>
       {/* Adicione aqui o campo para inserir um novo item seguindo a cifra de César */}
+      <FormFilter />
       <Form />
       <BoxCard />
     </>

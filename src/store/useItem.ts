@@ -1,20 +1,5 @@
 import { create } from 'zustand'
 
-// const items = [
-//   {
-//     id: 1,
-//     title: 'khoor'
-//   },
-//   {
-//     id: 2,
-//     title: 'hakors'
-//   },
-//   {
-//     id: 3,
-//     title: 'vhlguir'
-//   }
-// ]
-
 export type ItemProps = {
   id: number
   title: string
@@ -22,6 +7,7 @@ export type ItemProps = {
 
 type ItemStore = {
   items: ItemProps[]
+  addAllItems: (items: ItemProps[]) => void
   addItem: (item: ItemProps) => void
   setItems: (dragIndex: number, hoverIndex: number) => void
 }
@@ -29,6 +15,7 @@ type ItemStore = {
 export const useItemStore = create<ItemStore>(set => ({
   items: [],
   addItem: item => set(state => ({ items: [...state.items, item] })),
+  addAllItems: items => set({ items }),
   setItems: (dragIndex, hoverIndex) =>
     set(state => {
       const itemsList = [...state.items]

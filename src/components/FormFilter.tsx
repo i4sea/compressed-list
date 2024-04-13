@@ -1,25 +1,23 @@
 import { FormEvent, useRef } from 'react'
-import { useItemStore } from './store/useItem'
-import { crypto } from './crypto'
+import { useItemStore } from '../store/useItem'
 
-export default function Form() {
+export default function FormFilter() {
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const [items, addItem] = useItemStore(state => [state.items, state.addItem])
+  const [items, addAllItems] = useItemStore(state => [
+    state.items,
+    state.addAllItems
+  ])
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!inputRef.current) {
+    if (!inputRef.current || !inputRef.current.value) {
       return
     }
 
-    const newItem = {
-      id: items.length + 1,
-      title: crypto(inputRef.current.value)
-    }
-
-    addItem(newItem)
+    addAllItems(items.filter(item => item.title === inputRef.current?.value))
+    event.currentTarget.reset()
   }
 
   return (
@@ -32,9 +30,9 @@ export default function Form() {
       />
       <button
         type="submit"
-        className="h-14 px-4 bg-violet-600 hover:bg-violet-400 text-gray-100 rounded-md ml-2"
+        className="h-14 px-4 bg-emerald-600 hover:bg-emerald-400 text-gray-100 rounded-md ml-2"
       >
-        Adicionar
+        Buscar
       </button>
     </form>
   )
